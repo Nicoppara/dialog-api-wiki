@@ -7,17 +7,18 @@ description: 在 Paper 26.3 和 Folia 26.3 插件里构建原版 Dialog、读取
 
 DialogAPI 帮助插件在 Minecraft 原版客户端显示通知、确认框和表单。玩家按下按钮时，你收到当前页声明过的字段；玩家关页后，迟到的查询结果会失效。
 
-| 环境 | 当前版本 |
+| 环境 | 要求 |
 | --- | --- |
 | 服务端 | Paper 26.3、Folia 26.3 |
 | Java | 25 |
-| 库 | `cn.nicoppa.minecraft:dialog-api:1.2.3` |
 
 ## 🚀 第一次使用
 
 想了解与 Paper 的能力差异及建页速度，可以先看[与 Paper 对比](comparison.md)。
 
 从[安装与打包](installation.md)把库引入插件，再跟着[第一个对话框](first-dialog.md)做一个可以在游戏里打开的表单。示例让玩家输入昵称，并把本次提交的值回显给本人。
+
+想先看玩家会看到什么，可以从[一张通知到三层指南](composition.md)开始。里面有四张实机截图，也可以下载同一个示例插件的源码。
 
 ## 🧭 按场景查找
 

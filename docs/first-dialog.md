@@ -5,6 +5,8 @@ description: 用一条命令打开原生表单，读取玩家输入的昵称。
 
 这个例子注册 `/profiledemo`。点击“提交”会在聊天栏回显昵称；点击“取消”或按 Esc 会退出表单。
 
+要查看静态通知和嵌套页的实际效果，见[从一张通知到三层指南](composition.md)。
+
 ## 注册命令
 
 ```yaml title="src/main/resources/plugin.yml"

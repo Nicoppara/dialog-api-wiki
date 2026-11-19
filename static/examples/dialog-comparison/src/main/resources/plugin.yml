@@ -1,0 +1,8 @@
+name: DialogComparisonExample
+version: '1.0.0'
+main: dialogcomparison.DialogComparisonExample
+api-version: '26.3'
+commands:
+  dialogcompare:
+    description: 打开 Paper 或 DialogAPI 的对照示例。
+    usage: /<command> <paper|api> <notice|nested>
