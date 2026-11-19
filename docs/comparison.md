@@ -31,14 +31,6 @@ description: 对照 Paper 26.3 build 41 的原生能力、DialogAPI 1.2.0 提供
 
 最后一项对应 build 41 的一条具体转换路径。其他几项都可以由 Paper 插件自行编写。两者使用同一个原版客户端，玩家在原生等待屏幕本地退出时，服务端都收不到上一张表单的退出动作。可取消查询的写法见[按钮与退出](actions.md)。
 
-## 🧵 Paper 原生 Dialog 可以在 Folia 使用吗？
-
-可以。在游戏阶段，插件可以在目标玩家所属的区域调用 `player.showDialog(dialog)` 和 `player.closeDialog()`。若从后台查询或另一名玩家的区域发起操作，插件负责把任务交给目标玩家的实体调度器。登录配置阶段使用对应的配置连接，此时尚无游戏内玩家实体。[Paper 原生 Dialog 指南](https://docs.papermc.io/paper/dev/dialogs/) · [PaperMC 的 Folia 调度说明](https://docs.papermc.io/paper/dev/folia-support/)
-
-在官方 Folia 26.3 build 26 的隔离服上，仅用 Paper 的 `Dialog.create` 和 `DialogBody.item` 生成含三颗钻石的表单。协议客户端两次收到展示包并提交文本和复选框，分别触发了固定动作键的 `PlayerCustomClickEvent` 和 Paper 自带的点击回调，两次都收到了关闭包。展示、事件、回调和关闭时都记录到线程拥有目标玩家。
-
-DialogAPI 1.2.1 把线程交接放进受管入口。例如，`runtime.showPrepared(player, page)` 会按目标玩家调度，`afterRead` 会在回到该玩家后检查结果是否仍属于当前页面。直接调用 `page.show(player)` 时，调用方负责线程归属。[接入与双区域验证](async.md)
-
 ## ⏱️ 同一张表单，构建要多久
 
 在下列测量中，**从同一份表单构建一次，耗时由 13.766 μs 降至 1.167 μs，每次线程分配减少约 91%**。也就是在这个场景中，原路径的构建耗时约为新路径的 **11.8 倍**。
