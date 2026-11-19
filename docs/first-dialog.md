@@ -12,6 +12,7 @@ name: ProfileDemo
 version: '1.0'
 main: example.profile.ProfilePlugin
 api-version: '26.3'
+folia-supported: true
 commands:
   profiledemo:
     description: 打开昵称示例表单

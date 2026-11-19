@@ -2,16 +2,16 @@
 slug: /
 title: "📗 DialogAPI 使用手册"
 sidebar_label: "📗 简介"
-description: 在 Paper 26.3 插件里构建原版 Dialog、读取表单并安全地处理后台查询。
+description: 在 Paper 26.3 和 Folia 26.3 插件里构建原版 Dialog、读取表单并安全地处理后台查询。
 ---
 
 DialogAPI 帮助插件在 Minecraft 原版客户端显示通知、确认框和表单。玩家按下按钮时，你收到当前页声明过的字段；玩家关页后，迟到的查询结果会失效。
 
 | 环境 | 当前版本 |
 | --- | --- |
-| 服务端 | Paper 26.3 |
+| 服务端 | Paper 26.3、Folia 26.3 |
 | Java | 25 |
-| 库 | `cn.nicoppa.minecraft:dialog-api:1.2.0` |
+| 库 | `cn.nicoppa.minecraft:dialog-api:1.2.1` |
 
 ## 🚀 第一次使用
 

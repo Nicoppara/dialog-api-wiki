@@ -8,6 +8,7 @@ description: 独立库、Paper 和业务插件各自负责什么。
 | 类型或方法 | 用途 |
 | --- | --- |
 | `PaperDialogRuntime.install(plugin, namespace)` | 安装插件的受管运行时，注册点击、背包打开与离服监听 |
+| `PaperDialogRuntime.entityDispatch(plugin)` | 自定义宿主可复用玩家所属线程判断、实体调度以及排队期间玩家离线的清理回调 |
 | `showNativeFrame(player, factory)` | 用完整原生定义创建并托管页面 |
 | `PreparedDialog.compile` / `compileAsync` | 预编译内容后多次发送，或把编译提交给工作线程 |
 | `DialogRegistry.register` | 在 bootstrap 注册供原版命令和其他页面引用的页面 |
@@ -22,7 +23,7 @@ DialogAPI 定义并编译五种原版页面、按钮、输入和正文。游戏�
 
 ## 🧱 代码如何拆分
 
-DialogAPI 1.2.0 有 **11 个生产 Java 源文件**，发布 JAR 包含 **68 个 `.class` 文件**。例如，`NativeDialog.java` 在同一份定义旁放置了通知、确认、页面列表等不同类型，编译器会为这些嵌套类型分别生成文件。
+DialogAPI 1.2.1 有 **11 个生产 Java 源文件**，发布 JAR 包含 **71 个 `.class` 文件**。例如，`NativeDialog.java` 在同一份定义旁放置了通知、确认、页面列表等不同类型，编译器会为这些嵌套类型分别生成文件。
 
 | 职责 | 对应代码 | 可以单独判断的问题 |
 | --- | --- | --- |
