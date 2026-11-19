@@ -11,7 +11,7 @@ DialogAPI 帮助插件在 Minecraft 原版客户端显示通知、确认框和�
 | --- | --- |
 | 服务端 | Paper 26.3、Folia 26.3 |
 | Java | 25 |
-| 库 | `cn.nicoppa.minecraft:dialog-api:1.2.1` |
+| 库 | `cn.nicoppa.minecraft:dialog-api:1.2.2` |
 
 ## 🚀 第一次使用
 

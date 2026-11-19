@@ -1,14 +1,14 @@
 ---
 title: "⚖️ 与 Paper 对比"
 sidebar_label: "⚖️ 与 Paper 对比"
-description: 对照 Paper 26.3 build 41 的原生能力、DialogAPI 1.2.0 提供的会话管理和同一表单的构建实测。
+description: 对照 Paper 26.3 build 41 的原生能力、DialogAPI 1.2.2 提供的会话管理和同一表单的构建实测。
 ---
 
 如果只想向玩家显示一条通知，Paper 和 DialogAPI 都能完成。选择 DialogAPI 的理由通常出现在第二步：玩家已经退出或换了页，刚跑完的查询还该不该显示？在 DialogAPI 中，受管页面会记录这次操作属于谁、属于哪一页，插件可以专注于查询和展示结果。
 
 ## 🧩 原版能显示什么
 
-| 能力 | Paper 26.3 与 DialogAPI 1.2.0 的覆盖 |
+| 能力 | Paper 26.3 与 DialogAPI 1.2.2 的覆盖 |
 | --- | --- |
 | 5 种页面 | 通知、确认、多按钮、页面列表、服务器链接 |
 | 2 种正文 | 富文本，以及带可选说明、尺寸与提示的物品 |
@@ -17,7 +17,7 @@ description: 对照 Paper 26.3 build 41 的原生能力、DialogAPI 1.2.0 提供
 | 按钮动作 | 静态点击事件（含打开另一页）、代入输入值的命令模板、携带 NBT 的自定义点击 |
 | 展示与注册 | 游戏与登录配置阶段的展示和关闭、访问内置页面、启动时注册自定义页面 |
 
-这张表按原版客户端能表达的行为核对。Paper 还提供自己的构建器操作，例如用 `RegistryBuilderFactory.copyFrom(key)` 从注册项起草新页面。DialogAPI 1.2.0 的 `PreparedDialog.registered(key)` 用于**展示**已有注册项，库里没有对应的复制编辑入口。[Paper 官方 Dialog 指南](https://docs.papermc.io/paper/dev/dialogs/) · [DialogAPI 原生页面与注册](native-dialog.md)
+这张表按原版客户端能表达的行为核对。Paper 还提供自己的构建器操作，例如用 `RegistryBuilderFactory.copyFrom(key)` 从注册项起草新页面。DialogAPI 1.2.2 的 `PreparedDialog.registered(key)` 用于**展示**已有注册项，库里没有对应的复制编辑入口。[Paper 官方 Dialog 指南](https://docs.papermc.io/paper/dev/dialogs/) · [DialogAPI 原生页面与注册](native-dialog.md)
 
 ## 🔀 哪些工作可以交给库
 
@@ -31,19 +31,40 @@ description: 对照 Paper 26.3 build 41 的原生能力、DialogAPI 1.2.0 提供
 
 最后一项对应 build 41 的一条具体转换路径。其他几项都可以由 Paper 插件自行编写。两者使用同一个原版客户端，玩家在原生等待屏幕本地退出时，服务端都收不到上一张表单的退出动作。可取消查询的写法见[按钮与退出](actions.md)。
 
-## ⏱️ 同一张表单，构建要多久
+## ⏱️ 与 Paper 26.3 build 41 的建页实测
 
-在下列测量中，**从同一份表单构建一次，耗时由 13.766 μs 降至 1.167 μs，每次线程分配减少约 91%**。也就是在这个场景中，原路径的构建耗时约为新路径的 **11.8 倍**。
+在同一服务端线程上，用 Paper 的公开 builder 和 DialogAPI 1.2.2 从相同的字段、物品和按钮构建页面。简单通知只有标题和退出按钮。复杂表单含一段文字、一件带说明的物品、四类输入、两个操作按钮和一个退出按钮。
 
-| 服务端构建路径 | 每次构建耗时中位数 | 每次线程分配中位数 |
+| 单次操作 | Paper 耗时 | DialogAPI 耗时 | Paper 分配 | DialogAPI 分配 |
+| --- | ---: | ---: | ---: | ---: |
+| 从同一份 `DialogFrame` 构建简单通知 | 1.865 μs | 0.037 μs | 7,136 B | 264 B |
+| 从同一份 `DialogFrame` 构建复杂表单 | 28.645 μs | 0.512 μs | 87,200 B | 2,384 B |
+| 双方各自提前准备好声明，再构建复杂表单 | 25.217 μs | 0.471 μs | 85,120 B | 2,376 B |
+| 复用已建好的复杂表单，仅编码游戏阶段展示包 | 17.094 μs | 15.925 μs | 51,200 B | 51,464 B |
+
+**复杂表单的纯构建环节**，本次测得耗时约为 Paper 的 1/56，分配减少 97.3%。其中第一、二行都从已备好的同一个 `DialogFrame` 开始，由 Paper 路径生成 builder 声明，由 DialogAPI 路径直接生成原生页面。第三行提前准备了 Paper 的 `DialogBase` 和 `DialogType`，也提前准备了 DialogAPI 的 `NativeDialog`。两边都可以复用已经建好的静态页，复用时应看编码成本。第四行的耗时区间重叠。
+
+**算上游戏阶段编码**，复杂表单的分配在两次独立 JVM 测量中分别下降 **33.8%**（138,416 → 91,624 B）和 **32.8%**（139,472 → 93,728 B）。耗时受运行环境影响较大：首轮中位数分别为 Paper 129.9 μs、DialogAPI 157.7 μs，独立复测为 49.7 μs、26.9 μs。两次耗时排序相反，因此这组数据只支持稳定的分配收益。两条路径的游戏阶段包体均为 1,492 B，配置阶段均为 1,491 B，同一阶段逐字节一致。[下载游戏阶段复测 CSV](https://nicoppara.github.io/dialog-api-wiki/benchmarks/dialog-api-122-vs-paper-game-repeat.csv)
+
+每个场景两条路径交错运行，在同一 JVM 中预热四批，取随后九批的中位数。环境为 Paper 26.3 build 41、HotSpot Java 25.0.3。构建每批运行 30,000 次（复杂表单）或 50,000 次（通知）。耗时以墙钟计，分配使用线程计数器。TCP 收包另行校验。表中没有计入网络传输、玩家端绘制或整服 TPS。[下载 Paper 与 1.2.2 的逐批 CSV](https://nicoppara.github.io/dialog-api-wiki/benchmarks/dialog-api-122-vs-paper-26.3-41.csv)
+
+## 📉 从 1.2.1 升到 1.2.2
+
+下表是同一 Paper 26.3 build 41 进程中两版 DialogAPI 的对照。每格依次给出 **单次耗时 / 当前线程分配的字节数**，取七批中位数。
+
+| 操作 | 1.2.1 | 1.2.2 |
 | --- | ---: | ---: |
-| Paper builder，从相同的 `DialogFrame` 构建 | 13.766 μs | 53,664 B |
-| DialogAPI，从相同的 `DialogFrame` 构建 | 1.167 μs | 4,864 B |
-| DialogAPI，提前备好 `NativeDialog` 定义后再构建 | 0.553 μs | 2,408 B |
+| 从 `DialogFrame` 构建简单通知 | 148 ns / 1,032 B | 38 ns / 264 B |
+| 从 `DialogFrame` 构建含四类输入的表单 | 1,204 ns / 4,832 B | 481 ns / 2,384 B |
+| 从 `DialogFrame` 构建 21 段文字、96 件物品的页面 | 2,157 ns / 9,360 B | 2,005 ns / 8,360 B |
+| 从已有 `NativeDialog` 编译同一复杂表单 | 441 ns / 2,392 B | 467 ns / 2,392 B |
+| 提交纯文本页的 `compileAsync` | 112 ns / 1,008 B | 33 ns / 144 B |
+| 提交含一件自定义物品的 `compileAsync` | 99 ns / 1,048 B | 55 ns / 352 B |
+| 提交含 96 件物品的 `compileAsync` | 3,421 ns / 7,496 B | 2,764 ns / 6,584 B |
 
-前两行的起点相同。第三行已经提前转换好了定义，计时区间仍包含生成原生页面对象。对于长期复用的静态页，两个库都可以只构建一次，后续展示无需重复支付表中的成本。
+**动态表单受益最大。** 1.2.2 将 `DialogFrame` 直接编译为原生按钮和输入，复杂表单的构建分配下降 50.7%。已经持有 `NativeDialog` 的复杂表单，两版分配量相同，七批耗时区间重叠。静态页面可在内容变化时重新编译，平时复用同一个句柄。
 
-**测量方法。** Windows 11、HotSpot Java 25.0.3、Paper 26.3 build 41，堆为 512 MiB–1 GiB。样本含文字、一件附说明的物品、四种输入、两个操作按钮和一个退出按钮。先核对游戏阶段的数据包体逐字节相同，再在服务端线程上为每条路径预热 80,000 次，轮换顺序测七批，每批每条路径构建 40,000 次。分配量来自 HotSpot 的线程分配计数器。最后两批受主机负载影响，表中保留全部批次取中位数。网络、数据库、客户端绘制和整服 TPS 均在计时区间之外。[下载七批原始测量 CSV](https://nicoppara.github.io/dialog-api-wiki/benchmarks/paper-26.3-41.csv)
+异步三行只计调用线程取得快照、创建任务和 future 并提交到执行器的成本。随后修改原物品的数量、耐久或名称，后台编译仍使用提交时的值。两版 11 个页面在游戏与配置阶段共 22 组包体逐字节一致。[下载版本对照的逐批 CSV](https://nicoppara.github.io/dialog-api-wiki/benchmarks/dialog-api-121-122-batches.csv)
 
 ## 💎 重复打开同一张物品说明页
 
@@ -64,4 +85,4 @@ DialogAPI 1.2.1 在 Paper 26.3 build 41 上分别构建了一张钻石说明页�
 
 Paper 26.3 build 41 隔离服上的协议客户端分别在登录配置阶段和游戏阶段接收展示与关闭包，并把点击经 TCP 送回服务器。回调确认了连接归属，读到了文本、布尔、单选 ID 和滑块值。异步快照另做了交错验证：提交构建后把物品数量从 3 改成 9，工作线程生成的页仍保留 3。
 
-DialogAPI 1.2.0 的 28 项库测试通过；消费插件 FirTown 的构建报告共 2719 项通过，覆盖集成项目的各个模块。游戏客户端画面和其他 Paper 版本需要分别验收。实现如何拆分见[接口与边界](reference.md)。
+DialogAPI 1.2.2 的 43 项库测试通过。独立示例插件按 Maven 坐标引入并打包了全部 71 个库类。在 Folia 26.3 build 26，两个不同区域的玩家分别完成点击，后台读取回到正确区域，离服后旧结果被丢弃。在线玩家在运行时关闭和插件停用时均收到了关闭包。[接口与边界](reference.md)

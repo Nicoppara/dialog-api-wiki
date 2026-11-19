@@ -28,7 +28,7 @@ keys.action((who, response) -> {
 
 ## 谁来处理过期结果
 
-玩家先换页、按退出、打开背包或离服时，运行时会使相关结果失效。底层数据库操作可能继续执行；完成后不会用过期结果重新打开页面。发布新页本身也会使之前的读取失效，所以应在查询所属的页面就绪后再发起读取。
+玩家先换页、按退出、打开背包或离服时，运行时会使相关结果失效。从 1.2.2 开始，已失效且仍在排队的查询会在执行前跳过。已经开始的数据库读取可以完成，运行时会丢弃过期结果。发布新页本身也会使之前的读取失效，所以应在查询所属的页面就绪后再发起读取。
 
 ## 什么工作适合放进后台
 
@@ -48,17 +48,6 @@ keys.action((who, response) -> {
 
 宿主插件应在 `onDisable()` 中调用 `dialogs.close()`。在 `plugin.yml` 或 `paper-plugin.yml` 中声明 `folia-supported: true` 前，还需检查宿主自己的命令、世界操作和共享数据。两个玩家区域可能同时执行各自的业务回调。[PaperMC 的 Folia 线程指南](https://docs.papermc.io/paper/dev/folia-support/)
 
-### 从 SparrowUI 的修复看线程边界
-
-| 触发条件 | DialogAPI 1.2.1 的行为 |
-| --- | --- |
-| 全局任务读取只属于某个区域的 tick | 库内按钮有效期按 `System.nanoTime()` 计时，不读取区域 tick。[SparrowUI 全局 tick 修复](https://github.com/Catnies/sparrow-ui/commit/354974670cba15ab4786e001086e7cd6eda31aca) |
-| 排队前玩家实体已经退役 | 实体调度器可能直接返回 `null`。默认运行时在提交处释放该次点击票据或读取状态。[SparrowUI 离线命令清理](https://github.com/Catnies/sparrow-ui/commit/96b60934c9ea3773c15fa383c357b4dc6d88cb09) |
-| 玩家已换页或退出，后台导航随后完成 | 受管的 `afterRead` 只发布仍有效的结果。自建的后台导航需自行核对会话。[SparrowUI 异步导航修复](https://github.com/Catnies/sparrow-ui/commit/ea0029ae1d74941577ad4cad19ca920a2c926069) |
-| 插件停用时，业务回调已经开始 | 运行时关闭会话并阻止再开受管页。已开始的业务代码可以与停用收尾重叠，宿主负责协调自己使用的资源。[SparrowUI 玩家命令收尾](https://github.com/Catnies/sparrow-ui/commit/104c6afc4cf5eddb0fcb1e45bf6bcafdfaad8f69) |
-
-`PreparedDialog.compileAsync` 使用调用方传入的执行器。若宿主停用时直接丢弃排队任务，且无人取消对应的 future，等待它的调用方可能一直得不到结果。拥有这个执行器的插件应在停用时明确完成或取消自己等待的任务。[SparrowUI 对停用时待完成任务的修复](https://github.com/Catnies/sparrow-ui/commit/eddd25520ec2bebe8fb9dcebca05688f470c1cf5)
-
-### 在真实 Folia 上验证了什么
+## 在真实 Folia 上验证了什么
 
 在 Folia 26.3 build 26，两个协议客户端分别位于不同的 tick 区域。它们从后台请求打开表单，在各自的区域处理点击，再到后台读取数据。一个玩家收到了查询结果并点击退出；另一个在查询中途断线，完成的查询没有重新发布。最后让在线玩家保持受管表单并实际停用插件，客户端收到了关闭包。配置阶段的对话框和进入游戏后的对话框也分别验证了收发。

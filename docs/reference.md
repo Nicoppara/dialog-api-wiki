@@ -23,7 +23,7 @@ DialogAPI 定义并编译五种原版页面、按钮、输入和正文。游戏�
 
 ## 🧱 代码如何拆分
 
-DialogAPI 1.2.1 有 **11 个生产 Java 源文件**，发布 JAR 包含 **71 个 `.class` 文件**。例如，`NativeDialog.java` 在同一份定义旁放置了通知、确认、页面列表等不同类型，编译器会为这些嵌套类型分别生成文件。
+DialogAPI 1.2.2 有 **11 个生产 Java 源文件**，发布 JAR 包含 **71 个 `.class` 文件**。例如，`NativeDialog.java` 在同一份定义旁放置了通知、确认、页面列表等不同类型，编译器会为这些嵌套类型分别生成文件。
 
 | 职责 | 对应代码 | 可以单独判断的问题 |
 | --- | --- | --- |
@@ -35,7 +35,7 @@ DialogAPI 1.2.1 有 **11 个生产 Java 源文件**，发布 JAR 包含 **71 个
 
 `DialogSessions` 与 `DialogReads` 可以脱离 Minecraft 服务端测试。平台依赖也有明确的位置：物品正文使用 Bukkit 的 `ItemStack`，直接构建和发包适配 Paper 26.3；升级服务端时要复验这一层。
 
-SparrowUI 面向容器界面，源码里还有槽位、物品拖动、虚拟背包和物品交易的处理。原版 Dialog 提交的是表单字段，物品正文供玩家查看，没有背包槽位可拖。比较两个库时，先看所管理的交互。[SparrowUI 源码](https://github.com/Catnies/sparrow-ui) · [原版能力与实测对比](comparison.md)
+原版 Dialog 接收表单字段，物品正文供玩家查看。需要拖动物品、转移库存或结算交易的界面，应由管理背包槽位的插件处理。[原版能力与实测对比](comparison.md)
 
 ## 状态的含义
 
