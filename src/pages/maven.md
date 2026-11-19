@@ -17,6 +17,6 @@ https://nicoppara.github.io/dialog-api-wiki/maven/
 
 | 构件 | Maven 描述 | 编译件 | 校验 |
 | --- | --- | --- | --- |
-| `cn.nicoppa.minecraft:dialog-api:1.2.4` | [POM](https://nicoppara.github.io/dialog-api-wiki/maven/cn/nicoppa/minecraft/dialog-api/1.2.4/dialog-api-1.2.4.pom) | [JAR](https://nicoppara.github.io/dialog-api-wiki/maven/cn/nicoppa/minecraft/dialog-api/1.2.4/dialog-api-1.2.4.jar) | [SHA-256](https://nicoppara.github.io/dialog-api-wiki/maven/cn/nicoppa/minecraft/dialog-api/1.2.4/dialog-api-1.2.4.jar.sha256) |
+| `cn.nicoppa.minecraft:dialog-api:1.2.5` | [POM](https://nicoppara.github.io/dialog-api-wiki/maven/cn/nicoppa/minecraft/dialog-api/1.2.5/dialog-api-1.2.5.pom) | [JAR](https://nicoppara.github.io/dialog-api-wiki/maven/cn/nicoppa/minecraft/dialog-api/1.2.5/dialog-api-1.2.5.jar) | [SHA-256](https://nicoppara.github.io/dialog-api-wiki/maven/cn/nicoppa/minecraft/dialog-api/1.2.5/dialog-api-1.2.5.jar.sha256) |
 
 [查看 Maven 版本元数据](https://nicoppara.github.io/dialog-api-wiki/maven/cn/nicoppa/minecraft/dialog-api/maven-metadata.xml)

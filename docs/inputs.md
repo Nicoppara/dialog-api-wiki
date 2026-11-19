@@ -21,7 +21,7 @@ var mode = new DialogFrame.SingleOptionInput("mode", Component.text("可见范�
     "private");
 ```
 
-回调按返回的 `"private"` 或 `"public"` 执行操作。展示文案可以翻译，存储和比较使用稳定的选项 ID。
+回调按返回的 `"private"` 或 `"public"` 执行操作。展示文案可以翻译，存储和比较使用稳定的选项 ID。也可以用空字符串表示「无」：如果玩家选中这一项，`getOption` 返回 `""`；字段缺失或选项无效时返回 `null`。
 
 ## 滑块
 
