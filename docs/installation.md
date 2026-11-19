@@ -5,9 +5,9 @@ description: 在 Java 25 和 Paper 26.3 的 Gradle 项目中引入 DialogAPI。
 
 ## 取得构件
 
-本页示例使用 1.2.2。在持有该版本源码的机器上运行 `.\gradlew.bat build publishToMavenLocal`，即可按下面的坐标从本机 Maven 仓库构建。团队使用远程仓库时，先确认维护者已发布所需版本。
+本页示例使用 1.2.3。在持有该版本源码的机器上运行 `.\gradlew.bat build publishToMavenLocal`，即可按下面的坐标从本机 Maven 仓库构建。团队使用远程仓库时，先确认维护者已发布所需版本。
 
-如果维护者直接提供了 `dialog-api-1.2.2.jar`，把它放到消费插件的 `libs/` 下，并把下面的库依赖写为 `implementation(files("libs/dialog-api-1.2.2.jar"))`。
+如果维护者直接提供了 `dialog-api-1.2.3.jar`，把它放到消费插件的 `libs/` 下，并把下面的库依赖写为 `implementation(files("libs/dialog-api-1.2.3.jar"))`。
 
 ## 配置消费插件
 
@@ -30,7 +30,7 @@ java {
 }
 
 dependencies {
-    implementation("cn.nicoppa.minecraft:dialog-api:1.2.2")
+    implementation("cn.nicoppa.minecraft:dialog-api:1.2.3")
     compileOnly("io.papermc.paper:paper-api:26.3.build.5-alpha")
 }
 
