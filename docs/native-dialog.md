@@ -28,6 +28,12 @@ var prepared = PreparedDialog.compile(links);
 
 游戏阶段在玩家所属线程调用 `prepared.show(player)`。登录配置阶段调用 `prepared.show(connection)`，传入该次连接的 `PlayerConfigurationConnection`。两者都可用 `PreparedDialog.close(...)` 主动关闭。若从受管表单的按钮或 `afterRead` 回调切到此页，调用 `runtime.showPrepared(player, prepared)`，让运行时同时退役上一页的动作和待发布结果。
 
+### 物品正文什么时候可以复用？
+
+服务端把物品类型、数量和数据组件写入页面，原版客户端负责绘制模型、数量和提示。多人查看同一张固定物品说明页时，可在物品准备好后编译一次，再用 `runtime.showPrepared(player, page)` 分别展示。这样省掉后续的服务端建页，客户端每次打开仍需绘制。
+
+如果正文来自玩家背包，或 CraftEngine 按查看者转换了外观，应在该玩家所属区域取当次展示数据。数量、组件、语言或查看权限发生变化后需重新准备对应内容。托管按钮的键属于每次打开的会话，跨玩家复用时只共享固定内容。[受管按钮与退出](actions.md)
+
 ## 让工作线程构建页面
 
 `PreparedDialog.compileAsync(links, executor)` 返回 `CompletableFuture<PreparedDialog>`。含物品或注册表引用时，在物品所属线程调用。库先复制物品并解析页面键和标签，再由指定执行器转换标题、正文、输入和动作。工作线程完成后，将展示交回玩家线程；同一份静态结果可以发给多名玩家。对于玩家专属、随时可能过期的搜索结果，使用[异步读取](async.md)管理当前请求。
