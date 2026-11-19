@@ -11,7 +11,7 @@ DialogAPI 帮助插件在 Minecraft 原版客户端显示通知、确认框和�
 | --- | --- |
 | 服务端 | Paper 26.3 |
 | Java | 25 |
-| 库 | `cn.nicoppa.minecraft:dialog-api:1.1.0` |
+| 库 | `cn.nicoppa.minecraft:dialog-api:1.2.0` |
 
 ## 第一次使用
 
@@ -21,6 +21,7 @@ DialogAPI 帮助插件在 Minecraft 原版客户端显示通知、确认框和�
 
 | 我想做什么 | 阅读 |
 | --- | --- |
+| 复用静态页、显示服务器链接、使用注册表或在登录阶段显示页面 | [原生页面、预编译与注册](native-dialog.md) |
 | 显示一条通知、做二次确认，或把一组按钮排成多列 | [页面与布局](frames.md) |
 | 读取文本、复选框、单选或滑块 | [表单输入](inputs.md) |
 | 原地切换选项、翻页、返回或处理 Esc | [按钮与退出](actions.md) |

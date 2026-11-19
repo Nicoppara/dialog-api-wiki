@@ -23,6 +23,7 @@ commands:
 package example.profile;
 
 import cn.fircloud.fircore.dialog.api.DialogFrame;
+import cn.fircloud.fircore.dialog.api.NativeDialog;
 import cn.fircloud.fircore.dialog.api.paper.PaperDialogRuntime;
 import java.util.List;
 import net.kyori.adventure.text.Component;
@@ -42,19 +43,20 @@ public final class ProfilePlugin extends JavaPlugin {
     }
 
     private void open(Player player) {
-        dialogs.showFrame(player, keys -> {
-            var name = new DialogFrame.TextInput("nickname", Component.text("昵称"),
-                "", 180, 24, false);
-            var submit = new DialogFrame.Button(Component.text("提交"), null, 100,
+        dialogs.showNativeFrame(player, keys -> {
+            var name = new NativeDialog.TextInput("nickname", Component.text("昵称"),
+                "", 180, 24, true, null);
+            var submit = NativeDialog.Button.callback(Component.text("提交"), null, 100,
                 keys.action((who, response) -> {
                     String text = response == null ? null : response.getText("nickname");
                     who.sendMessage(text == null || text.isBlank()
                         ? "没有填写昵称" : "你填写的昵称是 " + text);
                 }));
-            var exit = new DialogFrame.Button(Component.text("取消"), null, 100,
+            var exit = NativeDialog.Button.callback(Component.text("取消"), null, 100,
                 keys.action((who, response) -> dialogs.close(who)));
-            return new DialogFrame(Component.text("昵称"), List.of(), List.of(name),
-                List.of(submit), null, exit, DialogFrame.AfterAction.NONE, 1);
+            return new NativeDialog(Component.text("昵称"), null, true, false,
+                DialogFrame.AfterAction.NONE, List.of(), List.of(name),
+                new NativeDialog.MultiAction(List.of(submit), exit, 1));
         });
     }
 

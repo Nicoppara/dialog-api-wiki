@@ -8,14 +8,17 @@ description: 独立库、Paper 和业务插件各自负责什么。
 | 类型或方法 | 用途 |
 | --- | --- |
 | `PaperDialogRuntime.install(plugin, namespace)` | 安装插件的受管运行时，注册点击、背包打开与离服监听 |
+| `showNativeFrame(player, factory)` | 用完整原生定义创建并托管页面 |
+| `PreparedDialog.compile` / `compileAsync` | 预编译内容后多次发送，或把编译提交给工作线程 |
+| `DialogRegistry.register` | 在 bootstrap 注册供原版命令和其他页面引用的页面 |
 | `showFrame(player, factory)` | 为玩家创建当前帧，绑定按钮，并显示原版 Dialog |
 | `afterRead(player, worker, read, publish)` | 合并同玩家的只读请求，在所属线程发布仍然有效的结果 |
 | `close(player)` / `close()` | 管理单个玩家的关闭，或在停用插件时释放运行时 |
 | `DialogFrame` | 声明标题、正文、输入、按钮和点击后行为 |
 
-## 为什么库的代码量较小
+## 原生构建与平台职责
 
-Paper 和原版客户端已经实现窗口显示、协议和输入控件。DialogAPI 集中处理每个查看者当前打开的帧、动作键、字段校验和异步生命周期。库存拖动、交易、资源包主题和数据库结构各有独立的状态与规则，分别由对应系统管理。
+DialogAPI 定义并编译五种原版页面、按钮、输入和正文。游戏阶段直接后端构造 Minecraft 协议对象；配置阶段通过对应连接发送，启动注册通过 Paper 的注册表生命周期提交。原版客户端绘制页面。字段校验、动作归属和后台结果由 DialogAPI 管理，权限与事务由使用该库的插件决定。[原生页面、预编译与注册](native-dialog.md)
 
 ## 状态的含义
 
