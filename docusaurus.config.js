@@ -28,6 +28,6 @@ module.exports = {
         { href: 'https://github.com/Nicoppara/dialog-api-wiki', label: 'GitHub', position: 'right' }
       ]
     },
-    prism: { theme: themes.github, darkTheme: themes.dracula, additionalLanguages: ['java', 'kotlin', 'powershell'] }
+    prism: { theme: themes.github, darkTheme: themes.dracula, additionalLanguages: ['java', 'kotlin', 'groovy', 'powershell'] }
   }
 };

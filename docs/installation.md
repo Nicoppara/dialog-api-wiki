@@ -1,17 +1,113 @@
 ---
 title: "📦 安装与打包"
-description: 在 Java 25 和 Paper 26.3 的 Gradle 项目中引入 DialogAPI。
+description: 用 Maven、Gradle Groovy 或 Gradle Kotlin DSL 将 DialogAPI 打进自己的插件。
 ---
 
-## 取得构件
+选择项目使用的构建工具，点击代码块右上角即可复制完整配置。示例使用 Java 25，从公开 Maven 仓库自动下载 DialogAPI。Paper API 由服务器提供，DialogAPI 随插件打包。
 
-本页示例使用 1.2.3。在持有该版本源码的机器上运行 `.\gradlew.bat build publishToMavenLocal`，即可按下面的坐标从本机 Maven 仓库构建。团队使用远程仓库时，先确认维护者已发布所需版本。
+[跳到 Maven](#maven) · [跳到 Gradle Groovy](#gradle-groovy) · [跳到 Gradle Kotlin DSL](#gradle-kotlin-dsl)
 
-如果维护者直接提供了 `dialog-api-1.2.3.jar`，把它放到消费插件的 `libs/` 下，并把下面的库依赖写为 `implementation(files("libs/dialog-api-1.2.3.jar"))`。
+## Maven
 
-## 配置消费插件
+```xml title="pom.xml"
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>example.profile</groupId>
+  <artifactId>profile-demo</artifactId>
+  <version>1.0</version>
 
-下面是本地 Maven 接入方式。Paper 由服务端提供，DialogAPI 随插件一起打包。
+  <properties>
+    <maven.compiler.release>25</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <repositories>
+    <repository>
+      <id>nicoppara-dialog</id>
+      <url>https://nicoppara.github.io/dialog-api-wiki/maven/</url>
+    </repository>
+    <repository>
+      <id>papermc</id>
+      <url>https://repo.papermc.io/repository/maven-public/</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>cn.nicoppa.minecraft</groupId>
+      <artifactId>dialog-api</artifactId>
+      <version>1.2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>io.papermc.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>26.3.build.5-alpha</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.16.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals><goal>shade</goal></goals>
+            <configuration>
+              <relocations>
+                <relocation>
+                  <pattern>cn.fircloud.fircore.dialog.api</pattern>
+                  <shadedPattern>example.profile.libs.dialog</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```
+
+运行 `mvn package`，插件成品位于 `target/profile-demo-1.0.jar`。
+
+## Gradle Groovy
+
+```groovy title="build.gradle"
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.3.2'
+}
+
+repositories {
+    maven {
+        url = uri('https://nicoppara.github.io/dialog-api-wiki/maven/')
+        content { includeGroup 'cn.nicoppa.minecraft' }
+    }
+    mavenCentral()
+    maven { url = uri('https://repo.papermc.io/repository/maven-public/') }
+}
+
+java { toolchain.languageVersion = JavaLanguageVersion.of(25) }
+
+dependencies {
+    implementation 'cn.nicoppa.minecraft:dialog-api:1.2.4'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.5-alpha'
+}
+
+tasks.shadowJar {
+    relocate 'cn.fircloud.fircore.dialog.api', 'example.profile.libs.dialog'
+}
+```
+
+运行 `./gradlew shadowJar`，插件成品位于 `build/libs/*-all.jar`。
+
+## Gradle Kotlin DSL
 
 ```kotlin title="build.gradle.kts"
 plugins {
@@ -20,29 +116,27 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
+    maven("https://nicoppara.github.io/dialog-api-wiki/maven/") {
+        content { includeGroup("cn.nicoppa.minecraft") }
+    }
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
-}
-
+java { toolchain.languageVersion.set(JavaLanguageVersion.of(25)) }
 dependencies {
-    implementation("cn.nicoppa.minecraft:dialog-api:1.2.3")
+    implementation("cn.nicoppa.minecraft:dialog-api:1.2.4")
     compileOnly("io.papermc.paper:paper-api:26.3.build.5-alpha")
 }
-
 tasks.shadowJar {
     relocate("cn.fircloud.fircore.dialog.api", "example.profile.libs.dialog")
 }
 ```
 
-将重定位目标改为自己插件的私有包名。Java 源码的 import 使用原包名 `cn.fircloud.fircore.dialog.api`，Shadow 在打包时重写它。
+运行 `./gradlew shadowJar`，插件成品位于 `build/libs/*-all.jar`。
 
-使用 Folia 的插件请同时查看[玩家线程与宿主声明](async.md)。
+## 启动示例
 
-## 安装到测试服
+把重定位目标 `example.profile.libs.dialog` 改为自己的插件包名。Java 源码仍从 `cn.fircloud.fircore.dialog.api` 导入，打包工具会同步重写引用。
 
-运行 `.\gradlew.bat shadowJar`，把生成的 `build/libs/*-all.jar` 放入 Paper 测试服的 `plugins/`，启动服务器。接下来编写[第一个对话框](first-dialog.md)。
+按[第一个对话框](first-dialog.md)添加插件类和命令声明，把打包后的插件放进测试服的 `plugins/`。支持 Folia 的宿主还需要声明[玩家线程与调度](async.md)中列出的插件属性。
