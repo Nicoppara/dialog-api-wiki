@@ -15,6 +15,7 @@ module.exports = {
     blog: false,
     theme: { customCss: require.resolve('./src/css/custom.css') }
   }]],
+  plugins: ['./plugins/ai-docs.mjs'],
   themes: [['@easyops-cn/docusaurus-search-local', {
     hashed: true, language: ['zh', 'en'], docsRouteBasePath: '/', indexBlog: false
   }]],
