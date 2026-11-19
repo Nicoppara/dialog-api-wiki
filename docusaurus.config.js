@@ -25,6 +25,7 @@ module.exports = {
       title: 'DialogAPI',
       items: [
         { type: 'docSidebar', sidebarId: 'guide', label: '使用手册', position: 'left' },
+        { to: '/maven/', label: 'Maven 仓库', position: 'right' },
         { href: 'https://github.com/Nicoppara/dialog-api-wiki', label: 'GitHub', position: 'right' }
       ]
     },

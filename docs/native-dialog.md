@@ -50,6 +50,19 @@ DialogRegistry.register(context, Key.key("example:links"), MyDialogs::linksPage)
 
 每次组装注册表时会再次调用工厂。注册成功后可以用 `/dialog show @s example:links`；其他页面可用 `new NativeDialog.RegisteredDialog(Key.key("example:links"))` 引用它。`InlineDialog` 可嵌入另一份定义，`TagEntries` 可以引用对话框标签。
 
+### 重复打开时会发送多少内容？
+
+`PreparedDialog.compile` 可以省下重复构建的时间。若编译的是内联页，游戏阶段每次打开仍会发送完整定义。三层旅行指南的首页一次带上两个子页，玩家继续点进这两个子页时，由客户端直接切换。[查看实机效果与包体测量](comparison.md)
+
+对已经同步给客户端的固定注册页，可以让每次打开只携带注册表 ID。下面的 `example:links` 对应上方注册步骤。在玩家所属线程执行：
+
+```java
+var links = PreparedDialog.registered(Key.key("example:links"));
+links.show(player);
+```
+
+这种方式把页面定义的传输移到注册表同步阶段。是否划算，取决于多少玩家会打开，以及每人会打开几次。每名玩家的输入、权限和本次回调仍通过受管页面处理。
+
 ## 原生动作与回调
 
 `StaticAction` 接受 Adventure 的静态点击事件，`OpenDialog` 跳到另一份定义或注册项，`CommandTemplate` 将玩家输入代入原版命令模板，`CustomAll` 把当前输入和附加 NBT 发给服务端。原生命令仍由服务端在命令发送者的权限下执行。
