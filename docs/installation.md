@@ -1,5 +1,5 @@
 ---
-title: 安装与打包
+title: "📦 安装与打包"
 description: 在 Java 25 和 Paper 26.3 的 Gradle 项目中引入 DialogAPI。
 ---
 

@@ -1,7 +1,7 @@
 ---
 slug: /
-title: DialogAPI 使用手册
-sidebar_label: 简介
+title: "📗 DialogAPI 使用手册"
+sidebar_label: "📗 简介"
 description: 在 Paper 26.3 插件里构建原版 Dialog、读取表单并安全地处理后台查询。
 ---
 
@@ -13,11 +13,13 @@ DialogAPI 帮助插件在 Minecraft 原版客户端显示通知、确认框和�
 | Java | 25 |
 | 库 | `cn.nicoppa.minecraft:dialog-api:1.2.0` |
 
-## 第一次使用
+## 🚀 第一次使用
+
+想了解与 Paper 的能力差异及建页速度，可以先看[与 Paper 对比](comparison.md)。
 
 从[安装与打包](installation.md)把库引入插件，再跟着[第一个对话框](first-dialog.md)做一个可以在游戏里打开的表单。示例让玩家输入昵称，并把本次提交的值回显给本人。
 
-## 按场景查找
+## 🧭 按场景查找
 
 | 我想做什么 | 阅读 |
 | --- | --- |
