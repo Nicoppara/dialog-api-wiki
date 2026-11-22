@@ -37,6 +37,8 @@ runtime.showPreencoded(connection, notice);  // 登录配置阶段
 
 普通预构建页在当前连接首次展示时仍由原版编码器编码。换连接、重新绑定协议或玩家语言改变时，会分别准备可用的字节。内容或服务端翻译资源更新后重新编译页面。插件停用时调用 `runtime.close()`，释放运行时并恢复它接管的编码器。
 
+如果页面内容随后会更新，可以用可编辑页面读入 Sparrow NBT 并保存两个独立版本。[读取、编辑和再次展示](document.md)
+
 ## 已有 NBT，让首包也复用
 
 这一写法使用 Minecraft 26.3 的 `CompoundTag` 和 `RegistryAccess`。插件源码需要可以编译 NMS 类型的开发依赖，例如对应版本的 paperweight 开发包。只想展示普通静态页面时，上一节的 API 足够。

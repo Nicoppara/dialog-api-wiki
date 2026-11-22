@@ -10,6 +10,8 @@ description: 独立库、Paper 和业务插件各自负责什么。
 | `PaperDialogRuntime.install(plugin, namespace)` | 安装插件的受管运行时，注册点击、背包打开与离服监听 |
 | `PaperDialogRuntime.entityDispatch(plugin)` | 自定义宿主可复用玩家所属线程判断、实体调度以及排队期间玩家离线的清理回调 |
 | `showNativeFrame(player, factory)` | 用完整原生定义创建并托管页面 |
+| `DialogDocument` | 读入和导出 Sparrow NBT，创建通知、表单及内联页并编辑内容。[可编辑页面](document.md) |
+| `PreparedDialog.game` / `configuration`、`withDocument` | 为目标阶段准备可发送版本，局部修改后复用不变部分 |
 | `PreparedDialog.compile` / `compileAsync` | 预编译内容后多次发送，或把编译提交给工作线程 |
 | `runtime.showPreencoded` | 在游戏或登录配置阶段复用静态页面的发送字节。[选择发送方式](preencoded.md) |
 | `EncodedDialog.configuration` / `game`、`PreparedDialog.fromNbt` | 将已完成的内联页面 NBT 准备为对应阶段的首包 |

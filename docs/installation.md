@@ -3,7 +3,7 @@ title: "📦 安装与打包"
 description: 用 Maven、Gradle Groovy 或 Gradle Kotlin DSL 将 DialogAPI 打进自己的插件。
 ---
 
-选择项目使用的构建工具，点击代码块右上角即可复制完整配置。示例使用 Java 25，从公开 Maven 仓库自动下载 DialogAPI。Paper API 由服务器提供，DialogAPI 随插件打包。
+选择项目使用的构建工具，点击代码块右上角即可复制完整配置。示例使用 Java 25，从公开 Maven 仓库自动下载 DialogAPI。Paper API 由服务器提供，DialogAPI 和它依赖的 Sparrow NBT 随插件打包。
 
 [跳到 Maven](#maven) · [跳到 Gradle Groovy](#gradle-groovy) · [跳到 Gradle Kotlin DSL](#gradle-kotlin-dsl)
 
@@ -26,6 +26,10 @@ description: 用 Maven、Gradle Groovy 或 Gradle Kotlin DSL 将 DialogAPI 打�
       <url>https://nicoppara.github.io/dialog-api-wiki/maven/</url>
     </repository>
     <repository>
+      <id>momirealms</id>
+      <url>https://repo.momirealms.net/releases/</url>
+    </repository>
+    <repository>
       <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
@@ -34,12 +38,12 @@ description: 用 Maven、Gradle Groovy 或 Gradle Kotlin DSL 将 DialogAPI 打�
     <dependency>
       <groupId>cn.nicoppa.minecraft</groupId>
       <artifactId>dialog-api</artifactId>
-      <version>1.2.8</version>
+      <version>1.3.0</version>
     </dependency>
     <dependency>
       <groupId>io.papermc.paper</groupId>
       <artifactId>paper-api</artifactId>
-      <version>26.3.build.5-alpha</version>
+      <version>26.3.build.41-alpha</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -63,6 +67,10 @@ description: 用 Maven、Gradle Groovy 或 Gradle Kotlin DSL 将 DialogAPI 打�
                 <relocation>
                   <pattern>cn.fircloud.fircore.dialog.api</pattern>
                   <shadedPattern>example.profile.libs.dialog</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>net.momirealms.sparrow.nbt</pattern>
+                  <shadedPattern>example.profile.libs.nbt</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
@@ -89,6 +97,7 @@ repositories {
         url = uri('https://nicoppara.github.io/dialog-api-wiki/maven/')
         content { includeGroup 'cn.nicoppa.minecraft' }
     }
+    maven { url = uri('https://repo.momirealms.net/releases/'); content { includeModule 'net.momirealms', 'sparrow-nbt' } }
     mavenCentral()
     maven { url = uri('https://repo.papermc.io/repository/maven-public/') }
 }
@@ -96,11 +105,12 @@ repositories {
 java { toolchain.languageVersion = JavaLanguageVersion.of(25) }
 
 dependencies {
-    implementation 'cn.nicoppa.minecraft:dialog-api:1.2.8'
-    compileOnly 'io.papermc.paper:paper-api:26.3.build.5-alpha'
+    implementation 'cn.nicoppa.minecraft:dialog-api:1.3.0'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.41-alpha'
 }
 
 tasks.shadowJar {
+    relocate 'net.momirealms.sparrow.nbt', 'example.profile.libs.nbt'
     relocate 'cn.fircloud.fircore.dialog.api', 'example.profile.libs.dialog'
 }
 ```
@@ -119,16 +129,18 @@ repositories {
     maven("https://nicoppara.github.io/dialog-api-wiki/maven/") {
         content { includeGroup("cn.nicoppa.minecraft") }
     }
+    maven("https://repo.momirealms.net/releases/") { content { includeModule("net.momirealms", "sparrow-nbt") } }
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 java { toolchain.languageVersion.set(JavaLanguageVersion.of(25)) }
 dependencies {
-    implementation("cn.nicoppa.minecraft:dialog-api:1.2.8")
-    compileOnly("io.papermc.paper:paper-api:26.3.build.5-alpha")
+    implementation("cn.nicoppa.minecraft:dialog-api:1.3.0")
+    compileOnly("io.papermc.paper:paper-api:26.3.build.41-alpha")
 }
 tasks.shadowJar {
+    relocate("net.momirealms.sparrow.nbt", "example.profile.libs.nbt")
     relocate("cn.fircloud.fircore.dialog.api", "example.profile.libs.dialog")
 }
 ```
