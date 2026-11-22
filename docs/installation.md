@@ -34,7 +34,7 @@ description: 用 Maven、Gradle Groovy 或 Gradle Kotlin DSL 将 DialogAPI 打�
     <dependency>
       <groupId>cn.nicoppa.minecraft</groupId>
       <artifactId>dialog-api</artifactId>
-      <version>1.2.5</version>
+      <version>1.2.7</version>
     </dependency>
     <dependency>
       <groupId>io.papermc.paper</groupId>
@@ -96,7 +96,7 @@ repositories {
 java { toolchain.languageVersion = JavaLanguageVersion.of(25) }
 
 dependencies {
-    implementation 'cn.nicoppa.minecraft:dialog-api:1.2.5'
+    implementation 'cn.nicoppa.minecraft:dialog-api:1.2.7'
     compileOnly 'io.papermc.paper:paper-api:26.3.build.5-alpha'
 }
 
@@ -125,7 +125,7 @@ repositories {
 
 java { toolchain.languageVersion.set(JavaLanguageVersion.of(25)) }
 dependencies {
-    implementation("cn.nicoppa.minecraft:dialog-api:1.2.5")
+    implementation("cn.nicoppa.minecraft:dialog-api:1.2.7")
     compileOnly("io.papermc.paper:paper-api:26.3.build.5-alpha")
 }
 tasks.shadowJar {
