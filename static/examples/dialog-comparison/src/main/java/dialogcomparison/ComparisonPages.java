@@ -3,6 +3,7 @@ package dialogcomparison;
 import cn.fircloud.fircore.dialog.api.DialogFrame;
 import cn.fircloud.fircore.dialog.api.NativeDialog;
 import cn.fircloud.fircore.dialog.api.paper.NativeDialogBackend;
+import cn.fircloud.fircore.dialog.api.paper.PreparedDialog;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
@@ -33,6 +34,10 @@ public final class ComparisonPages {
 
 	public static Dialog api(String fixture) {
 		return NativeDialogBackend.create(api(page(fixture)));
+	}
+
+	public static PreparedDialog prepare(String fixture) {
+		return PreparedDialog.compile(api(page(fixture)));
 	}
 
 	private static Page page(String fixture) {

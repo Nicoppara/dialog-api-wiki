@@ -22,7 +22,7 @@ var notice = new NativeDialog(Component.text("维护通知"), null, true, false,
 PreparedDialog.compile(notice).show(player);
 ```
 
-如果每次展示的标题和正文相同，可以保留 `PreparedDialog.compile(notice)` 的结果，后续直接调用 `show(player)`。[预编译与线程归属](native-dialog.md)
+如果每次展示的标题和正文相同，可以保留 `PreparedDialog.compile(notice)` 的结果，后续直接调用 `show(player)`。示例的 `/dialogcompare cached notice` 和 `/dialogcompare cached nested` 会保留页面，并在同一连接上复用编码。[查看静态页发送教程](preencoded.md)
 
 ## 三层指南怎样组合
 

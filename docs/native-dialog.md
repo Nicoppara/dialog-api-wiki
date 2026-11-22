@@ -28,6 +28,8 @@ var prepared = PreparedDialog.compile(links);
 
 游戏阶段在玩家所属线程调用 `prepared.show(player)`。登录配置阶段调用 `prepared.show(connection)`，传入该次连接的 `PlayerConfigurationConnection`。两者都可用 `PreparedDialog.close(...)` 主动关闭。若从受管表单的按钮或 `afterRead` 回调切到此页，调用 `runtime.showPrepared(player, prepared)`，让运行时同时退役上一页的动作和待发布结果。
 
+如果会在同一条连接上反复展示这张静态页，可把上面的 `prepared` 交给 `runtime.showPreencoded`。已有最终 NBT 的页面还能提前准备首包。[静态页面重复发送](preencoded.md)
+
 ### 物品正文什么时候可以复用？
 
 服务端把物品类型、数量和数据组件写入页面，原版客户端负责绘制模型、数量和提示。多人查看同一张固定物品说明页时，可在物品准备好后编译一次，再用 `runtime.showPrepared(player, page)` 分别展示。这样省掉后续的服务端建页，客户端每次打开仍需绘制。

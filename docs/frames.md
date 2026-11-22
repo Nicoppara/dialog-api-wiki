@@ -24,6 +24,17 @@ var help = new DialogFrame.Text(Component.text("选择本次操作"), 260);
 var body = List.<DialogFrame.Body>of(help);
 ```
 
+### 按物品 ID 展示图标
+
+公告里显示 3 个石头，可以直接给出注册 ID 和数量。下面的图标占 16 × 16 像素，开启数量等装饰和物品提示。把 `stone` 加入页面的 `body` 即可。
+
+```java
+var stone = new DialogFrame.KeyedItem(net.kyori.adventure.key.Key.key("minecraft:stone"),
+    3, null, 16, 16, true, true);
+```
+
+`KeyedItem` 接受有效的非空气物品 ID，数量为 1–99。展示玩家手中带附魔、名称或自定义数据组件的具体物品时，使用 `DialogFrame.Item`。自行用 `switch` 穷举正文的插件应覆盖 `KeyedItem`；两种物品正文都通过 `ItemDisplay` 提供说明、尺寸和显示选项。
+
 ## 换页与返回
 
 在动作回调中调用 `dialogs.showFrame(who, ...)` 打开下一页。需要保留的分类、页码、草稿由业务代码保存，返回时带上这些值重新构建页面。每次构建都通过当前 `keys` 创建按钮。

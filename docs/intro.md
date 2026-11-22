@@ -18,6 +18,8 @@ DialogAPI 帮助插件在 Minecraft 原版客户端显示通知、确认框和�
 2. [创建第一个表单](first-dialog.md)。在游戏中输入 `/profiledemo`，填写昵称并提交，聊天栏会显示这次输入的值。
 3. [组合多层页面](composition.md)。下载示例，按「主城 → 返回主城」体验两次跳转，或跟着四张实机截图阅读代码。
 
+4. [反复显示静态页面](preencoded.md)。运行 `/dialogcompare cached notice`，再看已有 NBT 怎样在第一次发送前准备好。
+
 ## 为页面选择入口
 
 | 你的页面 | 从哪里开始 |
