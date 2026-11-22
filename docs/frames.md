@@ -38,3 +38,5 @@ var stone = new DialogFrame.KeyedItem(net.kyori.adventure.key.Key.key("minecraft
 ## 换页与返回
 
 在动作回调中调用 `dialogs.showFrame(who, ...)` 打开下一页。需要保留的分类、页码、草稿由业务代码保存，返回时带上这些值重新构建页面。每次构建都通过当前 `keys` 创建按钮。
+
+自定义动作适配器可以保存 `frame.responseValidator()`，用 `validator.apply(response)` 按这一页声明的输入字段读取提交值。校验器只引用字段，等待异步结果期间可以释放表单正文和物品。受管页面会自动安装这个校验器。

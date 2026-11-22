@@ -13,7 +13,7 @@
 
 在旅行指南点「主城」，然后点「返回主城」，叶页提示用 `/spawn` 返回主城。末页「关闭」回到游戏。
 
-准备 JDK 25、Gradle 9 和 Paper 26.3 build 41。Gradle 从公共 Maven 仓库获取 `cn.nicoppa.minecraft:dialog-api:1.2.7`。
+准备 JDK 25、Gradle 9 和 Paper 26.3 build 41。Gradle 从公共 Maven 仓库获取 `cn.nicoppa.minecraft:dialog-api:1.2.8`。
 
 ```text
 gradle shadowJar

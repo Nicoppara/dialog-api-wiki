@@ -17,7 +17,7 @@ repositories {
 java { toolchain.languageVersion.set(JavaLanguageVersion.of(25)) }
 
 dependencies {
-    implementation("cn.nicoppa.minecraft:dialog-api:1.2.7")
+    implementation("cn.nicoppa.minecraft:dialog-api:1.2.8")
     compileOnly("io.papermc.paper:paper-api:26.3.build.41-alpha")
 }
 
